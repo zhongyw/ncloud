@@ -1,0 +1,51 @@
+{
+  "name": "ncloud",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --harmony app.js"
+  },
+  "dependencies": {
+    "body-parser": "1.10.x",
+    "co-fs": "^1.2.0",
+    "connect-multiparty": "1.2.x",
+    "cookie-parser": "1.3.x",
+    "gm": "1.x",
+    "htmlparser2": "3.x",
+    "jjv": "1.x",
+    "koa": "*",
+    "koa-bodyparser": "*",
+    "koa-cors": "0.0.16",
+    "koa-route": "*",
+    "lodash": "2.4.1",
+    "marked": "0.3.x",
+    "memcached": "0.2.x",
+    "mime": "1.x",
+    "mysql-warp": "*",
+    "node-uuid": "1.4.x",
+    "nodemailer": "1.3.x",
+    "oauth2-warp": "*",
+    "redis": "0.10.x",
+    "request": "2.x",
+    "serve-static": "1.7.x",
+    "swig": "1.3.x",
+    "thunkify": "2.*"
+  },
+  "devDependencies": {
+    "async": "*",
+    "co": "4.5.1",
+    "co-mocha": "^1.1.2",
+    "gulp": "^3.6.2",
+    "gulp-concat": "*",
+    "gulp-jslint": "*",
+    "gulp-less": "*",
+    "gulp-minify-css": "*",
+    "gulp-uglify": "*",
+    "less": "1.x",
+    "mocha": "2.x",
+    "should": "3.x"
+  },
+  "author": "zw198307@163.com",
+  "license": "ISC"
+}
