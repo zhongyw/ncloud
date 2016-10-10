@@ -39,9 +39,12 @@ var dict = {
 
 var models = fileUtil.getAllModels({fullPath: true, trimExt: true});
 
-_.each(models, function (modelName) {
-    console.log('found model: ' + modelName);
-    var model = require(modelName)(warp);
+_.each(models, function (modelPath) {
+    var modelName = modelPath.substring(modelPath.lastIndexOf("/") + 1);
+    console.log('found model: ' + modelPath);
+    var model = require(modelPath)(warp);
+    // console.log(modelName);
+    // console.log(model);
     // thunkify all database operations:
     _.each(['find', 'findAll', 'findNumber', 'create', 'update', 'destroy'], function (key) {
         model['$' + key] = thunkify(model[key]);
