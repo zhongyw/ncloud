@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --harmony app.js productionMode=false"
+    "start": "NODE_ENV=development node --harmony app.js productionMode=false"
   },
   "dependencies": {
     "body-parser": "1.10.x",

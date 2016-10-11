@@ -22,7 +22,7 @@ describe('#FileUtil', function(){
   it('getAllControllers', function(){
     var jss = fileUtils.getAllControllers();
     jss.should.be.ok;
-    jss.should.containEql('indexApi.js');
+    jss.should.containEql('userApi.js');
   });
 
   it('getAllControllers  with full path', function(){
