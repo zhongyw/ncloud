@@ -33,23 +33,40 @@ function* $getExams(page){
   return exams;
 }
 
+
 function* $createExam(examParam){
   var exam = yield Exam.$create({
     title: examParam.title,
     desc: examParam.desc,
     answer: examParam.answer
   });
+  return exam;
 }
 
+
 module.exports = {
+  'GET /api/exams': function* (){
+    helper.checkPermission(this.request, constants.role.EDITOR);
+    var
+        page = helper.getPage(this.request),
+        exams = yield $getExams(page);
+    console.log("exams=:" , exams);
+    this.body = {
+        page: page,
+        exams: exams
+    };
+  },
   'POST /api/createExam': function* (){
+      helper.checkPermission(this.request, constants.role.EDITOR);
       var data = this.request.body,
           examParam = {
             title: data.title,
             desc: data.desc,
             answer: data.answer
           };
+
       var exam = yield $createExam(examParam);
+
       this.body = exam;
   }
 }
