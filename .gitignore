@@ -7,7 +7,7 @@ lib-cov
 *.pid
 *.gz
 *.pyc
-
+ncloud-admin
 pids
 logs
 results

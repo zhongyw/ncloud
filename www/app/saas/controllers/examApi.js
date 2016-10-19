@@ -46,7 +46,7 @@ function* $createExam(examParam){
 
 module.exports = {
   'GET /api/exams': function* (){
-    helper.checkPermission(this.request, constants.role.EDITOR);
+    // helper.checkPermission(this.request, constants.role.EDITOR);
     var
         page = helper.getPage(this.request),
         exams = yield $getExams(page);
