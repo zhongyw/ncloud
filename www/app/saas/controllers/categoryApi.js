@@ -30,7 +30,7 @@ var
         return yield Category.$findAll({
             offset: page.offset,
             limit: page.limit,
-            order: 'display_order desc'
+            order: 'display_order'
         });
     }
 
