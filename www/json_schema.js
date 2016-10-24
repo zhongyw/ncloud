@@ -418,6 +418,15 @@ var schemas = {
             content: PROPERTY.TEXT
         },
         required: ['name', 'tag', 'content']
+    },
+    updateExam: {
+      type: 'object',
+      properties: {
+        title: PROPERTY.DESCRIPTION,
+        tags: PROPERTY.DESCRIPTION,
+        description: PROPERTY.TEXT,
+        answer: PROPERTY.TEXT
+      }
     }
 }
 

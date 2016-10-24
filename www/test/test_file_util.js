@@ -15,7 +15,7 @@ describe('#FileUtil', function(){
 
   it('getAllJsFile', function(){
     var jss = fileUtils.getAllJsFile(__dirname + "/../");
-    jss.should.containEql('TestFileUtil.js');
+    jss.should.containEql('test_file_util.js');
     jss.should.containEql('FileUtil.js');
   });
 
