@@ -186,5 +186,39 @@ var
             this.body = {
                 id: id
             };
+        },
+
+        'POST /api/categories/delete/selected': function* () {
+            /**
+             * Delete categories by ids.
+             *
+             * @name Delete Category
+             * @param {array} ids - The ids of categories.
+             * @return {object} Results contains deleted id. e.g. {"ids": ['id_aiejfi12', 'id_asdf212312']}
+             */
+
+            helper.checkPermission(this.request, constants.role.ADMIN);
+            var deletedIds = [],
+                ids = this.request.body.ids;
+
+            for(var i = 0; i < ids.length; i++){
+              var
+                  category = yield $getCategory(ids[i]),
+                  num = yield Article.$findNumber({
+                      select: 'count(id)',
+                      where: 'category_id=?',
+                      params: [ids[i]]
+                  });
+              if (num > 0) {
+                  throw api.conflictError('Category', 'Cannot delete category for there are some articles reference it.');
+              }
+              yield category.$destroy();
+              deletedIds.push(ids[i]);
+            }
+
+
+            this.body = {
+                deletedIds: deletedIds
+            };
         }
     };

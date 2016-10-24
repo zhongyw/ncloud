@@ -147,6 +147,7 @@ describe('#categories', function () {
             remote.shouldHasError(r3, 'entity:notfound', 'Category');
         });
 
+
         it('delete a non-exist category by editor', function* () {
             var r = yield remote.$post(roles.EDITOR, '/api/categories/' + remote.next_id() + '/delete');
             remote.shouldHasError(r, 'permission:denied', 'permission');
@@ -160,6 +161,38 @@ describe('#categories', function () {
         it('get non-exist category', function* () {
             var r = yield remote.$get(roles.GUEST, '/api/categories/' + remote.next_id());
             remote.shouldHasError(r, 'entity:notfound', 'Category');
+        });
+
+        it('delete categories by admin', function* () {
+            // create first:
+            var r = yield remote.$post(roles.ADMIN, '/api/categories', {
+                name: ' Before Delete  ',
+                tag: 'java',
+                description: '  '
+            });
+            remote.shouldNoError(r);
+            r.name.should.equal('Before Delete');
+            // create second:
+            var r11 = yield remote.$post(roles.ADMIN, '/api/categories', {
+                name: ' Before Delete2  ',
+                tag: 'javascript',
+                description: '  '
+            });
+            remote.shouldNoError(r11);
+            r11.name.should.equal('Before Delete2');
+            var ids = [r.id, r11.id];
+
+            // try delete:
+            var r2 = yield remote.$post(roles.ADMIN, '/api/categories/delete/selected', {ids: ids});
+            remote.shouldNoError(r2);
+            r2.deletedIds[0].should.equal(r.id);
+            r2.deletedIds[1].should.equal(r11.id);
+
+            // try get again:
+            var r3 = yield remote.$get(roles.GUEST, '/api/categories/' + r.id);
+            remote.shouldHasError(r3, 'entity:notfound', 'Category');
+            var r311 = yield remote.$get(roles.GUEST, '/api/categories/' + r11.id);
+            remote.shouldHasError(r311, 'entity:notfound', 'Category');
         });
     });
 });
