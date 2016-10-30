@@ -390,5 +390,23 @@ module.exports = {
         this.body = {
             locked_until: locked_until
         };
+    },
+    'POST /api/users/lock/selected': function* () {
+        var locked_until = this.request.body.locked_until,
+            ids = this.request.body.ids,
+            freezedIds = [];
+        if (!helper.isInteger(locked_until) || (locked_until < 0)) {
+            throw api.invalidParam('locked_until', 'locked_until must be an integer as a timestamp.');
+        }
+        helper.checkPermission(this.request, constants.role.EDITOR);
+        for(var i = 0; i < ids.length; i++){
+          yield $lockUser(ids[i], locked_until);
+          freezedIds.push(ids[i]);
+        }
+
+        this.body = {
+            locked_until: locked_until,
+            freezedIds: freezedIds
+        };
     }
 };

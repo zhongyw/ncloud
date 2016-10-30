@@ -92,6 +92,19 @@ describe('#user', function () {
             });
             remote.shouldHasError(r, 'auth:failed', 'locked');
         });
+        it('multiple user should lock at once', function* () {
+            var r22 = yield remote.$get(roles.ADMIN, '/api/users'),
+                users = r22.users,
+                userIds = [];
+            users.map((user)=>{user.name == 'admin'? "" : userIds.push(user.id)})
+            var r = yield remote.$post(roles.ADMIN, '/api/users/lock/selected', {
+                ids: userIds,
+                locked_until: 3000
+            });
+            remote.shouldNoError(r);
+            r.locked_until.should.equal(3000);
+            r.freezedIds.should.be.an.Array.and.have.length(3)
+        });
 
     });
 });

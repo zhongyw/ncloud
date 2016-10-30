@@ -175,7 +175,7 @@ describe('#articles', function () {
             dl.headers['content-type'].should.equal('image/jpeg');
             parseInt(dl.headers['content-length'], 10).should.approximately(39368, 10000);
         });
-        
+
         it('create article with wrong parameter by editor', function* () {
             var
                 i, r, params,
@@ -246,6 +246,44 @@ describe('#articles', function () {
             // query:
             var r3 = yield remote.$get(roles.EDITOR, '/api/articles/' + r1.id);
             remote.shouldHasError(r3, 'entity:notfound', 'Article');
+        });
+
+        it('delete articles by admin', function* () {
+            // create first:
+            var r = yield remote.$post(roles.ADMIN, '/api/articles', {
+                category_id: category.id,
+                name: 'Before Delete',
+                description: '   blablabla\nhaha...  \n   ',
+                tags: ' aaa,\n BBB,  \t ccc,CcC',
+                content: 'Long content...',
+                image: remote.readFileSync('res-image.jpg').toString('base64')
+            });
+            remote.shouldNoError(r);
+            r.name.should.equal('Before Delete');
+            // create second:
+            var r11 = yield remote.$post(roles.ADMIN, '/api/articles', {
+                category_id: category.id,
+                name: 'Before Delete2',
+                description: '   blablabla\nhaha...  \n   ',
+                tags: ' aaa,\n BBB,  \t ccc,CcC',
+                content: 'Long content...',
+                image: remote.readFileSync('res-image.jpg').toString('base64')
+            });
+            remote.shouldNoError(r11);
+            r11.name.should.equal('Before Delete2');
+            var ids = [r.id, r11.id];
+
+            // try delete:
+            var r2 = yield remote.$post(roles.ADMIN, '/api/articles/delete/selected', {ids: ids});
+            remote.shouldNoError(r2);
+            r2.deletedIds[0].should.equal(r.id);
+            r2.deletedIds[1].should.equal(r11.id);
+
+            // try get again:
+            var r3 = yield remote.$get(roles.GUEST, '/api/articles/' + r.id);
+            remote.shouldHasError(r3, 'entity:notfound', 'Article');
+            var r311 = yield remote.$get(roles.GUEST, '/api/articles/' + r11.id);
+            remote.shouldHasError(r311, 'entity:notfound', 'Article');
         });
     });
 });

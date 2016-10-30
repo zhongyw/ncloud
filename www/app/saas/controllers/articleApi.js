@@ -414,5 +414,33 @@ module.exports = {
         this.body = {
             id: id
         };
+    },
+
+    'POST /api/articles/delete/selected': function* () {
+        /**
+         * Delete articles by ids.
+         *
+         * @name Delete Articles
+         * @param {array} ids - The ids of articles.
+         * @return {object} Results contains deleted id. e.g. {"ids": ['id_aiejfi12', 'id_asdf212312']}
+         */
+
+        helper.checkPermission(this.request, constants.role.ADMIN);
+        var deletedIds = [],
+            ids = this.request.body.ids;
+
+        for(var i = 0; i < ids.length; i++){
+          var
+              article = yield $getArticle(ids[i]);
+
+          yield article.$destroy();
+          deletedIds.push(ids[i]);
+        }
+
+
+        this.body = {
+            deletedIds: deletedIds
+        };
     }
+
 };
