@@ -64,6 +64,17 @@ module.exports = {
 
     $getNavigations: $getNavigations,
 
+    'GET /api/navigations/:id': function* (id) {
+        /**
+         * Get categories by id.
+         *
+         * @name Get Category
+         * @param {string} id: The id of the category.
+         * @return {object} Category object.
+         */
+        this.body = yield $getNavigation(id);
+    },
+
     'GET /api/navigations/all/menus': function* () {
         /**
          * Get all navigation menus.
@@ -118,6 +129,43 @@ module.exports = {
             display_order: (num === null) ? 0 : num + 1
         });
         yield cache.$remove(constants.cache.NAVIGATIONS);
+    },
+
+    'POST /api/navigations/:id': function* (id) {
+        /**
+         * Update a category.
+         *
+         * @name Update Category
+         * @param {string} id - The id of the navigation.
+         * @param {string} [name] - The new name of the navigation.
+         * @param {string} [description] - The new description of the navigation.
+         * @return {object} Category object that was updated.
+         */
+        helper.checkPermission(this.request, constants.role.ADMIN);
+        var
+            props = [],
+            navigation,
+            data = this.request.body;
+        json_schema.validate('updateNavigation', data);
+        navigation = yield $getNavigation(id);
+        if (data.name) {
+            navigation.name = data.name.trim();
+            props.push('name');
+        }
+        if (data.url) {
+            navigation.url = data.url.trim();
+            props.push('url');
+        }
+
+        navigation.parent_id = data.parent_id.trim();
+        props.push('parent_id');
+
+        if (props.length > 0) {
+            props.push('updated_at');
+            props.push('version');
+            yield navigation.$update(props);
+        }
+        this.body = navigation;
     },
 
     'POST /api/navigations/all/sort': function* () {
